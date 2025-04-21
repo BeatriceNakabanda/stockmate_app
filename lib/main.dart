@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'screens/register_screen.dart';
+import 'package:stockmate_app/screens/register_screen.dart';
 import 'services/objectbox_service.dart';
 
 late ObjectBoxService objectBox;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //initialize ObjectBox & gives us access to userBox & itemBox
+  print("⏳ Initializing ObjectBox...");
+
   objectBox = await ObjectBoxService.create();
+  
+  print("✅ ObjectBox Initialized");
   runApp(const MyApp());
 }
 
