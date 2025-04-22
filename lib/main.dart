@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockmate_app/screens/register_screen.dart';
+import 'screens/login_screen.dart';
 import 'services/objectbox_service.dart';
 
 late ObjectBoxService objectBox;
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: RegisterScreen(),
+      home: const LoginScreen(),
     );
   }
 }
