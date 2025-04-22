@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockmate_app/screens/login_screen.dart';
 import '../models/user_model.dart';
 import '../main.dart'; // to access global objectBox
 
@@ -16,6 +17,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
 
   String? _selectedAccountType;
 
@@ -26,7 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         lastName: _lastNameController.text.trim(),
         email: _emailController.text.trim(),
         accountType: _selectedAccountType!,
-        userName: _userNameController.text.trim()
+        userName: _userNameController.text.trim(),
+        password: _passwordController.text.trim()
       );
 
       objectBox.userBox.put(user);
@@ -47,7 +52,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Register")),
-      body: Padding(
+      body: SafeArea(
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
@@ -102,15 +108,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   });
                 },
               ),
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Password"),
+                validator: (value) =>
+                    value == null || value.length < 6 ? "Password too short" : null,
+              ),
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Confirm Password"),
+                validator: (value) =>
+                    value != _passwordController.text ? "Passwords do not match" : null,
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => _registerUser(context),
                 child: const Text("Register"),
               ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => LoginScreen()),
+                  );
+                },
+                child: const Text("Already have an account? Login"),
+              ),
             ],
           ),
         ),
       ),
+      )
     );
   }
 }

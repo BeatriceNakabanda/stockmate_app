@@ -8,6 +8,7 @@ class UserModel {
   final String userName;
   final String email;
   final String accountType;
+  final String password;
 
   UserModel({
     this.id = 0,
@@ -15,6 +16,7 @@ class UserModel {
     required this.lastName,
     required this.userName,
     required this.email,
-    required this.accountType
+    required this.accountType,
+    required this.password
   });
 }

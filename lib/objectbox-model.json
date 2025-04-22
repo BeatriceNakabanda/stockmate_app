@@ -39,7 +39,7 @@
     },
     {
       "id": "2:1863247959599060771",
-      "lastPropertyId": "6:6996134833057943891",
+      "lastPropertyId": "7:3884758224944047718",
       "name": "UserModel",
       "properties": [
         {
@@ -71,6 +71,11 @@
         {
           "id": "6:6996134833057943891",
           "name": "accountType",
+          "type": 9
+        },
+        {
+          "id": "7:3884758224944047718",
+          "name": "password",
           "type": 9
         }
       ],

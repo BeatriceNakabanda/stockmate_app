@@ -58,7 +58,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 1863247959599060771),
       name: 'UserModel',
-      lastPropertyId: const obx_int.IdUid(6, 6996134833057943891),
+      lastPropertyId: const obx_int.IdUid(7, 3884758224944047718),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -89,6 +89,11 @@ final _entities = <obx_int.ModelEntity>[
         obx_int.ModelProperty(
             id: const obx_int.IdUid(6, 6996134833057943891),
             name: 'accountType',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 3884758224944047718),
+            name: 'password',
             type: 9,
             flags: 0)
       ],
@@ -202,13 +207,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final userNameOffset = fbb.writeString(object.userName);
           final emailOffset = fbb.writeString(object.email);
           final accountTypeOffset = fbb.writeString(object.accountType);
-          fbb.startTable(7);
+          final passwordOffset = fbb.writeString(object.password);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, firstNameOffset);
           fbb.addOffset(2, lastNameOffset);
           fbb.addOffset(3, userNameOffset);
           fbb.addOffset(4, emailOffset);
           fbb.addOffset(5, accountTypeOffset);
+          fbb.addOffset(6, passwordOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -228,13 +235,16 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final accountTypeParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 14, '');
+          final passwordParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 16, '');
           final object = UserModel(
               id: idParam,
               firstName: firstNameParam,
               lastName: lastNameParam,
               userName: userNameParam,
               email: emailParam,
-              accountType: accountTypeParam);
+              accountType: accountTypeParam,
+              password: passwordParam);
 
           return object;
         })
@@ -291,4 +301,8 @@ class UserModel_ {
   /// see [UserModel.accountType]
   static final accountType =
       obx.QueryStringProperty<UserModel>(_entities[1].properties[5]);
+
+  /// see [UserModel.password]
+  static final password =
+      obx.QueryStringProperty<UserModel>(_entities[1].properties[6]);
 }

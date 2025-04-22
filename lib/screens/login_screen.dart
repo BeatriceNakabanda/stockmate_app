@@ -3,6 +3,7 @@ import 'package:stockmate_app/objectbox.g.dart';
 import '../models/user_model.dart';
 import '../main.dart';
 import 'home_screen.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,12 +15,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _passwordController = TextEditingController();
 
   void _login(BuildContext context) {
     final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
 
     final query = objectBox.userBox
-        .query(UserModel_.email.equals(email))
+        .query(UserModel_.email.equals(email) & UserModel_.password.equals(password))
         .build();
 
     final user = query.findFirst();
@@ -39,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("❌ User not found")),
+        const SnackBar(content: Text("❌ Invalid email or password")),
       );
     }
   }
@@ -60,6 +64,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 validator: (value) =>
                     value == null || value.isEmpty ? "Enter email" : null,
               ),
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(labelText: "Password"),
+                validator: (value) =>
+                    value == null || value.isEmpty ? "Enter password" : null,
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
@@ -68,6 +79,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
                 child: const Text("Login"),
+              ),
+              // const SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => RegisterScreen()),
+                  );
+                },
+                child: const Text("Not registered yet? Create an account"),
               ),
             ],
           ),
