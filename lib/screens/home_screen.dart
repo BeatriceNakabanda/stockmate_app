@@ -6,6 +6,7 @@ import '../models/user_model.dart';
 import '../models/stock_item.dart';
 import '../main.dart';
 import 'add_item_screen.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserModel user;
@@ -120,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("StockMate"),
+        title: const Text("Stock Mate"),
       ),
       drawer: Drawer(
         child: ListView(
@@ -180,7 +181,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.remove('loggedInUserId'); // clear session
                 Navigator.pop(context); // close drawer
-                Navigator.pop(context); // Exit to login screen
+                // Navigate to LoginScreen and remove all previous routes
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false, // Remove all previous routes
+                );
               },
             ),
           ],
