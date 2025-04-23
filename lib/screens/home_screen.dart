@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 import '../models/stock_item.dart';
 import '../main.dart';
@@ -175,8 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text("Logout"),
-              onTap: () {
-                Navigator.pop(context);
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('loggedInUserId'); // clear session
+                Navigator.pop(context); // close drawer
                 Navigator.pop(context); // Exit to login screen
               },
             ),

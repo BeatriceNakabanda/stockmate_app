@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:stockmate_app/screens/register_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/login_screen.dart';
 import 'services/objectbox_service.dart';
+import 'models/user_model.dart';
 
 late ObjectBoxService objectBox;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //initialize ObjectBox & gives us access to userBox & itemBox
-  print("⏳ Initializing ObjectBox...");
+  print("Initializing ObjectBox...");
 
   objectBox = await ObjectBoxService.create();
   
-  print("✅ ObjectBox Initialized");
-  runApp(const MyApp());
+  print("ObjectBox Initialized");
+  final prefs = await SharedPreferences.getInstance();
+  final savedUserId = prefs.getInt('loggedInUserId');
+
+  UserModel? user;
+  if (savedUserId != null) {
+    user = objectBox.userBox.get(savedUserId);
+  }
+
+  runApp(MyApp(user: user));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final UserModel? user; 
+  const MyApp({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

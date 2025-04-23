@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockmate_app/objectbox.g.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 import '../main.dart';
 import 'home_screen.dart';
@@ -17,11 +18,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login(BuildContext context) {
+  void _login(BuildContext context) async{
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-
-
     final query = objectBox.userBox
         .query(UserModel_.email.equals(email) & UserModel_.password.equals(password))
         .build();
@@ -30,6 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
     query.close();
 
     if (user != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('loggedInUserId', user.id); //Save user ID
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("✅ Welcome, ${user.firstName}!")),
       );
