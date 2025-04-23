@@ -15,46 +15,12 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import 'models/inventory_item.dart';
+import 'models/stock_item.dart';
 import 'models/user_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <obx_int.ModelEntity>[
-  obx_int.ModelEntity(
-      id: const obx_int.IdUid(1, 760861351120320677),
-      name: 'InventoryItem',
-      lastPropertyId: const obx_int.IdUid(5, 7267736245137559340),
-      flags: 0,
-      properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 9194826212640845617),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 400937212476152057),
-            name: 'name',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 6966722571018905010),
-            name: 'description',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 7974049205838567260),
-            name: 'imagePath',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 7267736245137559340),
-            name: 'createdAt',
-            type: 10,
-            flags: 0)
-      ],
-      relations: <obx_int.ModelRelation>[],
-      backlinks: <obx_int.ModelBacklink>[]),
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 1863247959599060771),
       name: 'UserModel',
@@ -98,6 +64,40 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(3, 5766409558164853547),
+      name: 'StockItem',
+      lastPropertyId: const obx_int.IdUid(5, 1802779554897671988),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 3083605184390288838),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 1683265649067683307),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 4194566678260215610),
+            name: 'description',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 8364675703754492424),
+            name: 'imagePath',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 1802779554897671988),
+            name: 'createdAt',
+            type: 10,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -136,65 +136,27 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(2, 1863247959599060771),
+      lastEntityId: const obx_int.IdUid(3, 5766409558164853547),
       lastIndexId: const obx_int.IdUid(0, 0),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [760861351120320677],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [
+        9194826212640845617,
+        400937212476152057,
+        6966722571018905010,
+        7974049205838567260,
+        7267736245137559340
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
 
   final bindings = <Type, obx_int.EntityDefinition>{
-    InventoryItem: obx_int.EntityDefinition<InventoryItem>(
-        model: _entities[0],
-        toOneRelations: (InventoryItem object) => [],
-        toManyRelations: (InventoryItem object) => {},
-        getId: (InventoryItem object) => object.id,
-        setId: (InventoryItem object, int id) {
-          object.id = id;
-        },
-        objectToFB: (InventoryItem object, fb.Builder fbb) {
-          final nameOffset = fbb.writeString(object.name);
-          final descriptionOffset = fbb.writeString(object.description);
-          final imagePathOffset = fbb.writeString(object.imagePath);
-          fbb.startTable(6);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, nameOffset);
-          fbb.addOffset(2, descriptionOffset);
-          fbb.addOffset(3, imagePathOffset);
-          fbb.addInt64(4, object.createdAt.millisecondsSinceEpoch);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (obx.Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final idParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-          final nameParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
-          final descriptionParam =
-              const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, '');
-          final imagePathParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 10, '');
-          final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
-          final object = InventoryItem(
-              id: idParam,
-              name: nameParam,
-              description: descriptionParam,
-              imagePath: imagePathParam,
-              createdAt: createdAtParam);
-
-          return object;
-        }),
     UserModel: obx_int.EntityDefinition<UserModel>(
-        model: _entities[1],
+        model: _entities[0],
         toOneRelations: (UserModel object) => [],
         toManyRelations: (UserModel object) => {},
         getId: (UserModel object) => object.id,
@@ -247,62 +209,106 @@ obx_int.ModelDefinition getObjectBoxModel() {
               password: passwordParam);
 
           return object;
+        }),
+    StockItem: obx_int.EntityDefinition<StockItem>(
+        model: _entities[1],
+        toOneRelations: (StockItem object) => [],
+        toManyRelations: (StockItem object) => {},
+        getId: (StockItem object) => object.id,
+        setId: (StockItem object, int id) {
+          object.id = id;
+        },
+        objectToFB: (StockItem object, fb.Builder fbb) {
+          final nameOffset = fbb.writeString(object.name);
+          final descriptionOffset = fbb.writeString(object.description);
+          final imagePathOffset = fbb.writeString(object.imagePath);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addOffset(2, descriptionOffset);
+          fbb.addOffset(3, imagePathOffset);
+          fbb.addInt64(4, object.createdAt.millisecondsSinceEpoch);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final descriptionParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, '');
+          final imagePathParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 10, '');
+          final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
+          final object = StockItem(
+              id: idParam,
+              name: nameParam,
+              description: descriptionParam,
+              imagePath: imagePathParam,
+              createdAt: createdAtParam);
+
+          return object;
         })
   };
 
   return obx_int.ModelDefinition(model, bindings);
 }
 
-/// [InventoryItem] entity fields to define ObjectBox queries.
-class InventoryItem_ {
-  /// see [InventoryItem.id]
-  static final id =
-      obx.QueryIntegerProperty<InventoryItem>(_entities[0].properties[0]);
-
-  /// see [InventoryItem.name]
-  static final name =
-      obx.QueryStringProperty<InventoryItem>(_entities[0].properties[1]);
-
-  /// see [InventoryItem.description]
-  static final description =
-      obx.QueryStringProperty<InventoryItem>(_entities[0].properties[2]);
-
-  /// see [InventoryItem.imagePath]
-  static final imagePath =
-      obx.QueryStringProperty<InventoryItem>(_entities[0].properties[3]);
-
-  /// see [InventoryItem.createdAt]
-  static final createdAt =
-      obx.QueryDateProperty<InventoryItem>(_entities[0].properties[4]);
-}
-
 /// [UserModel] entity fields to define ObjectBox queries.
 class UserModel_ {
   /// see [UserModel.id]
   static final id =
-      obx.QueryIntegerProperty<UserModel>(_entities[1].properties[0]);
+      obx.QueryIntegerProperty<UserModel>(_entities[0].properties[0]);
 
   /// see [UserModel.firstName]
   static final firstName =
-      obx.QueryStringProperty<UserModel>(_entities[1].properties[1]);
+      obx.QueryStringProperty<UserModel>(_entities[0].properties[1]);
 
   /// see [UserModel.lastName]
   static final lastName =
-      obx.QueryStringProperty<UserModel>(_entities[1].properties[2]);
+      obx.QueryStringProperty<UserModel>(_entities[0].properties[2]);
 
   /// see [UserModel.userName]
   static final userName =
-      obx.QueryStringProperty<UserModel>(_entities[1].properties[3]);
+      obx.QueryStringProperty<UserModel>(_entities[0].properties[3]);
 
   /// see [UserModel.email]
   static final email =
-      obx.QueryStringProperty<UserModel>(_entities[1].properties[4]);
+      obx.QueryStringProperty<UserModel>(_entities[0].properties[4]);
 
   /// see [UserModel.accountType]
   static final accountType =
-      obx.QueryStringProperty<UserModel>(_entities[1].properties[5]);
+      obx.QueryStringProperty<UserModel>(_entities[0].properties[5]);
 
   /// see [UserModel.password]
   static final password =
-      obx.QueryStringProperty<UserModel>(_entities[1].properties[6]);
+      obx.QueryStringProperty<UserModel>(_entities[0].properties[6]);
+}
+
+/// [StockItem] entity fields to define ObjectBox queries.
+class StockItem_ {
+  /// see [StockItem.id]
+  static final id =
+      obx.QueryIntegerProperty<StockItem>(_entities[1].properties[0]);
+
+  /// see [StockItem.name]
+  static final name =
+      obx.QueryStringProperty<StockItem>(_entities[1].properties[1]);
+
+  /// see [StockItem.description]
+  static final description =
+      obx.QueryStringProperty<StockItem>(_entities[1].properties[2]);
+
+  /// see [StockItem.imagePath]
+  static final imagePath =
+      obx.QueryStringProperty<StockItem>(_entities[1].properties[3]);
+
+  /// see [StockItem.createdAt]
+  static final createdAt =
+      obx.QueryDateProperty<StockItem>(_entities[1].properties[4]);
 }

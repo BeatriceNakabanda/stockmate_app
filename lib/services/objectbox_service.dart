@@ -1,5 +1,5 @@
 //Manage the ObjectBox store
-import '../models/inventory_item.dart';
+import '../models/stock_item.dart';
 import '../models/user_model.dart';
 import '../objectbox_model.dart'; 
 
@@ -8,11 +8,11 @@ class ObjectBoxService {
 
   //Boxes or table or collectins
   late final Box<UserModel> userBox;
-  late final Box<InventoryItem> itemBox;
+  late final Box<StockItem> itemBox;
 
   ObjectBoxService._create(this.store) {
     userBox = Box<UserModel>(store);
-    itemBox = Box<InventoryItem>(store);
+    itemBox = Box<StockItem>(store);
   }
 
   static Future<ObjectBoxService> create() async {

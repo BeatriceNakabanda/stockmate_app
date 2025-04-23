@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-import '../models/inventory_item.dart';
+import '../models/stock_item.dart';
 import '../main.dart';
+import 'add_item_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserModel user;
@@ -16,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  List<InventoryItem> userItems = [];
+  List<StockItem> userItems = [];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -36,9 +37,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onTabTapped(int index) {
-    setState(() {
+    if(index == 1){
+    // Navigate to Add Item screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AddItemScreen(user: widget.user),
+      ),
+    ).then((_) {
+      // After adding an item and returning
+      _loadInventory();       // Reload inventory list
+      _selectedIndex = 0;     // Go back to Home tab
+      setState(() {});
+    });
+    } else {
+      // Normal tab switching for Home and Profile
+      setState(() {
       _selectedIndex = index;
     });
+    }
   }
 
   Widget _buildInventoryList() {
@@ -68,11 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-  Widget _buildAddPlaceholder() {
-    return const Center(child: Text("➕ Add Item Screen (coming soon)"));
-  }
-
   Widget _buildProfilePlaceholder() {
     return Center(
       child: Column(
@@ -96,8 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (_selectedIndex) {
       case 0:
         return _buildInventoryList();
-      case 1:
-        return _buildAddPlaceholder();
       case 2:
         return _buildProfilePlaceholder();
       default:
