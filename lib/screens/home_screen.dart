@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockmate_app/screens/item_details_screen.dart';
 import '../models/user_model.dart';
 import '../models/stock_item.dart';
 import '../main.dart';
@@ -82,6 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 : const Icon(Icons.inventory),
             title: Text(item.name),
             subtitle: Text(item.description),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ItemDetailsScreen(item: item),
+                ),
+              );
+            },
           ),
         );
       },
