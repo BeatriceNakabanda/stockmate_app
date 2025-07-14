@@ -68,7 +68,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(3, 5766409558164853547),
       name: 'StockItem',
-      lastPropertyId: const obx_int.IdUid(5, 1802779554897671988),
+      lastPropertyId: const obx_int.IdUid(6, 3931139792536201903),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -95,6 +95,11 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(5, 1802779554897671988),
             name: 'createdAt',
             type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 3931139792536201903),
+            name: 'synced',
+            type: 1,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -222,12 +227,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final nameOffset = fbb.writeString(object.name);
           final descriptionOffset = fbb.writeString(object.description);
           final imagePathOffset = fbb.writeString(object.imagePath);
-          fbb.startTable(6);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addOffset(2, descriptionOffset);
           fbb.addOffset(3, imagePathOffset);
           fbb.addInt64(4, object.createdAt.millisecondsSinceEpoch);
+          fbb.addBool(5, object.synced);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -245,12 +251,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 10, '');
           final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
+          final syncedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
           final object = StockItem(
               id: idParam,
               name: nameParam,
               description: descriptionParam,
               imagePath: imagePathParam,
-              createdAt: createdAtParam);
+              createdAt: createdAtParam,
+              synced: syncedParam);
 
           return object;
         })
@@ -311,4 +320,8 @@ class StockItem_ {
   /// see [StockItem.createdAt]
   static final createdAt =
       obx.QueryDateProperty<StockItem>(_entities[1].properties[4]);
+
+  /// see [StockItem.synced]
+  static final synced =
+      obx.QueryBooleanProperty<StockItem>(_entities[1].properties[5]);
 }

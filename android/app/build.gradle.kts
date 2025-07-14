@@ -41,6 +41,13 @@ android {
     }
 }
 
+dependencies {
+   implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    
+    implementation("com.google.firebase:firebase-database-ktx") // for Realtime DB
+    implementation("com.google.firebase:firebase-analytics-ktx") // optional
+}
+
 flutter {
     source = "../.."
 }

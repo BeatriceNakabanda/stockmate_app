@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockmate_app/screens/item_details_screen.dart';
@@ -8,6 +11,7 @@ import '../models/stock_item.dart';
 import '../main.dart';
 import 'add_item_screen.dart';
 import 'login_screen.dart';
+import '../services/sync_service.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserModel user;
@@ -23,13 +27,37 @@ class _HomeScreenState extends State<HomeScreen> {
   List<StockItem> userItems = [];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  late final SyncService _syncService;
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
+    _syncService = SyncService();
+
     _loadInventory();
+    _trySyncOnStartup();
+    _listenForConnectivityChanges();
   }
+
+  void _trySyncOnStartup() async {
+    if (await _syncService.isOnline()) {
+      await _syncService.syncUnsyncedItems();
+      _loadInventory(); // Refresh list after syncing
+    }
+  }
+
+  void _listenForConnectivityChanges() {
+    _connectivitySubscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        await _syncService.syncUnsyncedItems();
+        _loadInventory(); // Refresh list after sync
+      }
+    });
+  }
+
 
   void _loadInventory() {
     // For now, load ALL items
@@ -38,6 +66,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {}); // refresh UI
   }
+
+  @override
+void dispose() {
+  //Dispose of the subscription
+  _connectivitySubscription.cancel();
+  super.dispose();
+}
+
 
   void _onTabTapped(int index) {
     if(index == 1){

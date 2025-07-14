@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockmate_app/firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'services/objectbox_service.dart';
 import 'models/user_model.dart';
@@ -11,7 +12,9 @@ late ObjectBoxService objectBox;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //initialize ObjectBox & gives us access to userBox & itemBox
   print("Initializing ObjectBox...");
-  await Firebase.initializeApp(); // Auto-uses both google-services.json & GoogleService-Info.plist
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ); // Auto-uses both google-services.json & GoogleService-Info.plist
 
   objectBox = await ObjectBoxService.create();
   

@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import '../main.dart';
 import '../models/stock_item.dart';
 import '../models/user_model.dart';
+import '../services/sync_service.dart';
 
 class AddItemScreen extends StatefulWidget {
   final UserModel user;
@@ -23,6 +24,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   File? _pickedImage;
+  final syncService = SyncService();
 
   final ImagePicker _picker = ImagePicker();
 
@@ -78,50 +80,54 @@ class _AddItemScreenState extends State<AddItemScreen> {
       'imagePath': _pickedImage!.path,
       'createdAt': DateTime.now().toIso8601String(),
     });
+    objectBox.itemBox.put(item);
 
-    // Check user account type and push to MongoDB if standard account
-    if (widget.user.accountType.toLowerCase() == "standard") {
-      
-      
-      try {
-        // final url = Uri.parse('https://680cd9b32ea307e081d53889.mockapi.io/api/stock-items/stock-items');
-        final response = await http.post(
-          Uri.parse('http://10.0.2.2:5000/api/stock-items'),
-          
-          // url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'name': item.name,
-            'description': item.description,
-            'imagePath': item.imagePath,
-            'createdAt': item.createdAt.toIso8601String(),
-            'userId': widget.user.id, 
-          }),
-        );
-        print('Response status: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        if (response.statusCode == 201) {
-          ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Item synced to MongoDB")),
-        );
-          print("Item synced to MongoDB");
-        } else {
-          print("Failed to sync: ${response.body}");
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Failed to sync:}")),
-          );
-        }
-      } catch (e) {
-        print("ync error: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("ync error: e")),
-        );
-      }
-    } else{
-      // Save to ObjectBox if free aacount
-          objectBox.itemBox.put(item);
-
+    //upload to firebase if online
+    if (await syncService.isOnline()) {
+      await syncService.syncUnsyncedItems();
     }
+
+    // Check user account type and push to firebase if standard account
+    // if (widget.user.accountType.toLowerCase() == "standard") {
+      // try {
+      //   // final url = Uri.parse('https://680cd9b32ea307e081d53889.mockapi.io/api/stock-items/stock-items');
+      //   final response = await http.post(
+      //     Uri.parse('http://10.0.2.2:5000/api/stock-items'),
+          
+      //     // url,
+      //     headers: {'Content-Type': 'application/json'},
+      //     body: jsonEncode({
+      //       'name': item.name,
+      //       'description': item.description,
+      //       'imagePath': item.imagePath,
+      //       'createdAt': item.createdAt.toIso8601String(),
+      //       'userId': widget.user.id, 
+      //     }),
+      //   );
+      //   print('Response status: ${response.statusCode}');
+      //   print('Response body: ${response.body}');
+      //   if (response.statusCode == 201) {
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text("Item synced to MongoDB")),
+      //   );
+      //     print("Item synced to MongoDB");
+      //   } else {
+      //     print("Failed to sync: ${response.body}");
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       const SnackBar(content: Text("Failed to sync:}")),
+      //     );
+      //   }
+      // } catch (e) {
+      //   print("ync error: $e");
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text("ync error: e")),
+      //   );
+      // }
+    // } else{
+    //   // Save to ObjectBox if free aacount
+    //       objectBox.itemBox.put(item);
+
+    // }
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Item added successfully!")),
