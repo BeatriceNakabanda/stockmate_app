@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setInt('loggedInUserId', user.id); //Save user ID
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("✅ Welcome, ${user.firstName}!")),
+        SnackBar(content: Text("Welcome, ${user.firstName}!")),
       );
 
       // Navigate to home screen
@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("❌ Invalid email or password")),
+        const SnackBar(content: Text("Invalid email or password")),
       );
     }
   }

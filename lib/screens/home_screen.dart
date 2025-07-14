@@ -170,14 +170,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.bar_chart),
-              title: const Text("Reports"),
-              onTap: () {
-                // TODO: Implement reports page
-                Navigator.pop(context);
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.bar_chart),
+            //   title: const Text("Reports"),
+            //   onTap: () {
+            //     // TODO: Implement reports page
+            //     Navigator.pop(context);
+            //   },
+            // ),
             ListTile(
               leading: const Icon(Icons.star),
               title: Text("Account Type: ${widget.user.accountType}"),

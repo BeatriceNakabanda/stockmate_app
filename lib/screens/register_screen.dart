@@ -37,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       objectBox.userBox.put(user);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("✅ User saved locally!")),
+        const SnackBar(content: Text("User saved locally!")),
       );
 
       // Optionally clear form
